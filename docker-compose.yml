@@ -1,0 +1,32 @@
+﻿version: '3.8'
+
+services:
+  web:
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    build:
+      context: .
+    volumes:
+      - .:/app/
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env
+      - ./.env.db
+  db:
+    restart: always
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.db
+  redis:
+    restart: always
+    image: "redis:alpine"
+    volumes:
+      - redis_data:/var/lib/redis
+volumes:
+  postgres_data_dev:
+  redis_data:
